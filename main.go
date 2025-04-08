@@ -13,22 +13,22 @@ import (
 	"os/exec"
 )
 
-type PageData struct {
-	Signature string
-}
-
 func main() {
 	http.HandleFunc("/", HomePage)
 	http.HandleFunc("/upload", UploadFile)
 	http.HandleFunc("/favicon.ico", func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, "templates/favicon.ico")
 	})
-	http.ListenAndServe(":22222", nil)
+
+	port := 9999
+	fmt.Printf("浏览器运行 ht%s://127.0.0.1:%d", "tp", port)
+	_ = http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
+
 }
 
-func HomePage(w http.ResponseWriter, r *http.Request) {
+func HomePage(w http.ResponseWriter, _ *http.Request) {
 	t, _ := template.ParseFiles("templates/index.html")
-	t.Execute(w, nil)
+	_ = t.Execute(w, nil)
 }
 
 func UploadFile(w http.ResponseWriter, r *http.Request) {
@@ -38,8 +38,13 @@ func UploadFile(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	defer file.Close()
-	defer tempFile.Close()
+
+	defer func(file multipart.File) {
+		_ = file.Close()
+	}(file)
+	defer func(tempFile *os.File) {
+		_ = tempFile.Close()
+	}(tempFile)
 
 	// 检查签名
 	signature, err := checkSignature(tempFile)
@@ -50,11 +55,14 @@ func UploadFile(w http.ResponseWriter, r *http.Request) {
 
 	// 返回 JSON 数据
 	w.Header().Set("Content-Type", "application/json")
-	fmt.Fprintf(w, `{"signature": %q}`, signature)
+	_, _ = fmt.Fprintf(w, `{"signature": %q}`, signature)
 }
 
 func parseAndSaveFile(r *http.Request) (multipart.File, *os.File, error) {
-	r.ParseMultipartForm(500 << 20) // 限制上传大小为500MB
+	err := r.ParseMultipartForm(500 << 20)
+	if err != nil {
+		return nil, nil, fmt.Errorf("file too big: %w", err)
+	} // 限制上传大小为500MB
 	file, _, err := r.FormFile("apkfile")
 	if err != nil {
 		return nil, nil, fmt.Errorf("error retrieving the file")
@@ -90,12 +98,4 @@ func checkSignature(tempFile *os.File) (string, error) {
 	}
 
 	return string(utf8Bytes), nil
-}
-
-func displayResult(w http.ResponseWriter, signature string) {
-	data := PageData{
-		Signature: signature,
-	}
-	t, _ := template.ParseFiles("templates/index.html")
-	t.Execute(w, data)
 }
