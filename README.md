@@ -29,7 +29,7 @@
 
 ## 页面效果
 
-<img src="./image/view.jpg" width="500px" height="225px" >
+<img src="./image/view.jpg">
 
 
 
