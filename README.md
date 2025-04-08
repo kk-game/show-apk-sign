@@ -14,14 +14,11 @@
 
 本工具通过Web端接收上传的APK文件，后端运行`keytool -printcert -jarfile <apk>`命令后，将签名信息显示在Web页面上，简化了签名检查流程。
 
-## 快速开始, 要使用此工具，请按以下步骤操作：
+## 快速开始
 
-1. **配置java环境** 配置java1.8及以上的配置环境, 在cmd命令行中用java 和javac 查看java环境是否配置好,必须步骤
-2. **设置端口**：修改`main.go`文件中的`http.ListenAndServe(":9999", nil)`，将`:9999`替换为所需的端口号。
-3. **编译程序**：在命令行中运行`go build main.go`。
-4. **启动服务**：通过访问`IP:Port`（替换为实际的IP地址和你设置的端口）来启动Web服务。
-5. **上传APK文件**：在Web界面中上传你的APK文件。
-6. **检查签名**：点击`上传并检查`按钮，查看签名信息。
+`git clone https://github.com/kk-game/show-apk-sign.git`
+
+运行build.bat (windows平台)
 
 ## 缘起
 

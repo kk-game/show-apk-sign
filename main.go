@@ -82,7 +82,7 @@ func parseAndSaveFile(r *http.Request) (multipart.File, *os.File, error) {
 }
 
 func checkSignature(tempFile *os.File) (string, error) {
-	cmd := exec.Command("keytool", "-printcert", "-jarfile", tempFile.Name())
+	cmd := exec.Command("./tools/keytool.exe", "-printcert", "-jarfile", tempFile.Name())
 	var out bytes.Buffer
 	cmd.Stdout = &out
 	err := cmd.Run()
