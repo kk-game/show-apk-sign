@@ -1,9 +1,15 @@
+在根目录下创建 
+data\db\
+data\log\mongodb.log
+一个路径一个文件
+然后:进入bin目录执行下面命令 下面路径保持和当前路径一致, 配置cfg文件的路径也要保持一致
+
 打开powershell管理员版本 
 
-./mongod.exe --config "D:\Programs\mongodb-win32-x86_64-windows-6.0.17\mongodb.cfg" --install --serviceName "mongodb"
+./mongod.exe --config "D:\Programs\mongodb-win32-x86_64-windows-6.0.25\mongodb.cfg" --install --serviceName "mongodb"
 
 运行 net start mongodb
 
 停止 net stop mongodb
 
-.\mongod.exe -remove mongodb
+./mongod.exe -remove mongodb
