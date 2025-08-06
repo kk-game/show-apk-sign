@@ -1,0 +1,9 @@
+打开powershell管理员版本 
+
+./mongod.exe --config "D:\Programs\mongodb-win32-x86_64-windows-6.0.17\mongodb.cfg" --install --serviceName "mongodb"
+
+运行 net start mongodb
+
+停止 net stop mongodb
+
+.\mongod.exe -remove mongodb
